@@ -53,4 +53,4 @@ print(A * B)
 a = 2
 X = torch.arange(24).reshape(2,3,4)
 print(a + X)
-print((a + X).shape)
+print((a * X).shape)
