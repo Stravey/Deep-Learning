@@ -39,7 +39,7 @@ def func() :
     y.sum().backward()
     print(x.grad == 2 * x)
 
-def f(x):
+def f(a):
     b = a * 2
     while b.norm() < 1000:
         b = b * 2
@@ -50,9 +50,9 @@ def f(x):
     return c
 
 
-
 if __name__ == '__main__':
-    func()
-
-
-
+    a = torch.randn(size=(),requires_grad=True)
+    d = f(a)
+    d.backward()
+    print(a.grad)
+    print(a.grad == d / a)
