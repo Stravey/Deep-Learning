@@ -1,4 +1,4 @@
-# 手搓线性回归
+# 手搓线性回归实例
 import random
 import torch
 from d2l import torch as d2l
@@ -16,7 +16,7 @@ features,labels = synthetic_data(true_w,true_b,1000)
 print('features:',features[0],'\nlabel:',labels[0])
 # 打印散点图
 d2l.set_figsize()
-d2l.plt.scatter(features[:,(1)].detach().numpy(),labels.detach().numpy(),1)
+d2l.plt.scatter(features[:, 1].detach().numpy(), labels.detach().numpy(), 1)
 d2l.plt.show()
 
 # 2.读取数据集
@@ -46,7 +46,7 @@ def linreg(X, w, b):
 def squared_loss(y_hat,y):
     return (y_hat - y.reshape(y_hat.shape)) ** 2 / 2
 
-# 6.定义优化算法
+# 6.定义优化算法 更新模型参数
 def sgd(params,lr,batch_size):
     with torch.no_grad():
         for param in params:
