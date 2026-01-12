@@ -52,6 +52,7 @@ def method_b():
     d = a + b
     print(f'{timer.stop():.5f} sec')
 
+# 正态分布与平方损失
 # 定义正态分布
 def normal(x,mu,sigma):
     p = 1 / math.sqrt(2 *  math.pi * sigma ** 2)
@@ -69,7 +70,7 @@ def normal_print():
     plt.savefig('normal_distributional.png',dpi = 300,bbox_inches = 'tight')
     plt.show()
 
-
+    
 if  __name__ == '__main__':
     # method_a()
     # method_b()
