@@ -46,7 +46,7 @@ def cross_entropy(y_hat, y):
 cross_entropy(y_hat, y)
 
 # 5.分类精度 预测值y_hat 真实值y
-def accuracy(y_hat, y):
+def accuracy(y_hat, y):  #@save
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
         y_hat = y_hat.argmax(axis = 1)
     cmp = y_hat.type(y.dtype) == y
@@ -54,7 +54,7 @@ def accuracy(y_hat, y):
 # print(accuracy(y_hat, y) / len(y))   0.5
 
 # 定义一个实用程序类Accumulator
-class Accumulator:
+class Accumulator:   #@save
     def __init__(self,n):
         self.data = [0.0] * n
 
@@ -68,7 +68,7 @@ class Accumulator:
         return self.data[idx]
 
 # 对于任意数据迭代器data_iter可访问的数据集，我们可以评估在任意模型net的精度
-def evaluate_accuracy(net,data_iter):
+def evaluate_accuracy(net,data_iter):   #@save
     if isinstance(net,torch.nn.Module):
         net.eval()
     metric = Accumulator(2)
@@ -78,7 +78,7 @@ def evaluate_accuracy(net,data_iter):
     return metric[0] / metric[1]
 
 # 6.训练
-def train_epoch_ch3(net,train_iter,loss,updater):
+def train_epoch_ch3(net,train_iter,loss,updater):   #@save
     """训练模型一个迭代周期"""
     # 将模型设置为训练模式
     if isinstance(net,torch.nn.Module):
@@ -102,7 +102,7 @@ def train_epoch_ch3(net,train_iter,loss,updater):
     # 返回训练损失和训练精度
     return metric[0] / metric[2],metric[1] / metric[2]
 
-class Animator:
+class Animator:   #@save
     """在动画中绘制数据"""
     def __init__(self,xlabel = None,ylabel = None,legend = None,xlim = None,
                  ylim = None,xscale = 'linear',yscale = 'linear',
@@ -142,7 +142,7 @@ class Animator:
         display.display(self.fig)
         display.clear_output(wait=True)
 
-def train_ch3(net,train_iter,test_iter,loss,num_epochs,updater):
+def train_ch3(net,train_iter,test_iter,loss,num_epochs,updater):   #@save
     global test_acc, train_metrics
     animator = Animator(xlabel='epoch',xlim=[1,num_epochs],ylim=[0.3,0.9],
                         legend=['train loss','train acc','test acc'])
@@ -165,7 +165,7 @@ num_epochs = 10
 train_ch3(net,train_iter,test_iter,cross_entropy,num_epochs,updater)
 
 # 7.预测
-def predict_ch3(net,test_iter,n = 6):
+def predict_ch3(net,test_iter,n = 6):  #@save
     global X, y
     for X,y in test_iter:
         break
