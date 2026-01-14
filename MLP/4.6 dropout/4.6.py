@@ -1,13 +1,58 @@
+# dropout
+import matplotlib.pyplot as plt
 import torch
 from IPython import display
+from torch import nn
 from d2l import torch as d2l
 
+# 定义dropout_layer函数 噪声层
+def dropout_layer(X,dropout):
+    assert 0 <= dropout <= 1
+    if dropout == 1:
+        return torch.zeros_like(X)
+    if dropout == 0:
+        return X
+    mask = (torch.rand(X.shape) > dropout).float()
+    return mask * X / (1.0 - dropout)
+
+X = torch.arange(16,dtype=torch.float32).reshape((2,8))
+# print(X)
+# print(dropout_layer(X,0.))
+# print(dropout_layer(X,0.5))
+# print(dropout_layer(X,1.))
+
+num_inputs,num_outputs,num_hidden1,num_hidden2 = 784,10,256,256
+
+dropout1,dropout2 = 0.2,0.5
+class Net(nn.Module):
+    def __init__(self, num_inputs, num_outputs, num_hidden1, num_hidden2,
+                 is_training = True):
+        super(Net,self).__init__()
+        self.num_inputs = num_inputs
+        self.training = is_training
+        self.lin1 = nn.Linear(num_inputs, num_hidden1)
+        self.lin2 = nn.Linear(num_hidden1, num_hidden2)
+        self.lin3 = nn.Linear(num_hidden2, num_outputs)
+        self.relu = nn.ReLU()
+
+    def forward(self,X):
+        H1 = self.relu(self.lin1(X.reshape((-1,self.num_inputs))))
+        if self.training == True:
+            H1 = dropout_layer(H1,dropout1)
+        H2 = self.relu(self.lin2(H1))
+        if self.training == True:
+            H2 = dropout_layer(H2,dropout2)
+        out = self.lin3(H2)
+        return out
+# 创建模型
+net = Net(num_inputs, num_outputs, num_hidden1, num_hidden2)
+
+# 训练代码
 def accuracy(y_hat, y):  #@save
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
         y_hat = y_hat.argmax(axis = 1)
     cmp = y_hat.type(y.dtype) == y
     return float(cmp.type(y.dtype).sum())
-
 # 定义一个实用程序类Accumulator
 class Accumulator:   #@save
     def __init__(self,n):
@@ -32,7 +77,7 @@ def evaluate_accuracy(net,data_iter):   #@save
             metric.add(accuracy(net(X),y),y.numel())
     return metric[0] / metric[1]
 
-def train_epoch_ch3(net,train_iter,loss,updater):   #@save
+def train_epoch(net,train_iter,loss,updater):   #@save
     """训练模型一个迭代周期"""
     # 将模型设置为训练模式
     if isinstance(net,torch.nn.Module):
@@ -96,15 +141,23 @@ class Animator:   #@save
         display.display(self.fig)
         display.clear_output(wait=True)
 
-def train_ch3(net,train_iter,test_iter,loss,num_epochs,updater):   #@save
+def train(net,train_iter,test_iter,loss,num_epochs,updater):   #@save
     global test_acc, train_metrics
     animator = Animator(xlabel='epoch',xlim=[1,num_epochs],ylim=[0.3,0.9],
                         legend=['train loss','train acc','test acc'])
     for epoch in range(num_epochs):
-        train_metrics = train_epoch_ch3(net,train_iter,loss,updater)
+        train_metrics = train_epoch(net,train_iter,loss,updater)
         test_acc = evaluate_accuracy(net,test_iter)
         animator.add(epoch + 1,train_metrics + (test_acc,))
     train_loss,train_acc = train_metrics
     assert train_loss < 0.5,train_loss
     assert train_acc <= 1 and train_acc > 0.7,train_acc
     assert test_acc < 1 and test_acc > 0.7,test_acc
+    plt.show()
+
+
+num_epochs,lr,batch_size = 10,0.5,256
+loss = nn.CrossEntropyLoss(reduction='none')
+train_iter,test_iter = d2l.load_data_fashion_mnist(batch_size)
+trainer = torch.optim.SGD(net.parameters(),lr = lr)
+train(net, train_iter, test_iter, loss,num_epochs,trainer)
