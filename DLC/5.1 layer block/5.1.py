@@ -1,4 +1,4 @@
-
+# 层 块
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -19,6 +19,9 @@ class MLP(nn.Module):
         return self.out(F.relu(self.hidden(X)))
 
 # 顺序块
+# 定义两个函数
+# 一个是将块逐个追加到列表中的函数
+# 一个是前向传播函数 用于将输入按追加快的顺序传递给块组成的"链条”
 class MySequential(nn.Sequential):
     def __init__(self,*args):
         super().__init__()
@@ -29,8 +32,11 @@ class MySequential(nn.Sequential):
         for block in self._modules.values():
             X = block(X)
         return X
+# 实现多层感知机
+net1 = MySequential(nn.Linear(20,256),nn.ReLU(),nn.Linear(256,10))
 
-# 前向传播函数中执行代码
+# 前向传播函数中执行代码 前向传播可以自定义
+# 反向传播都是自动微分
 class FixedHiddenMLP(nn.Module):
     def __init__(self):
         super().__init__()
@@ -57,3 +63,8 @@ class NestMLP(nn.Module):
 
 chimera = nn.Sequential(NestMLP(),nn.Linear(16,20),FixedHiddenMLP())
 print(chimera(X))
+
+# 一个块可以由许多层组成；一个块可以由许多块组成
+# 块可以包含代码
+# 块负责大量的内部处理，包括参数初始化和反向传播
+# 层和块的顺序连接由Sequential块处理
