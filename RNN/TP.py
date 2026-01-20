@@ -155,8 +155,8 @@ def seq_data_iter_sequential(corpus,batch_size,num_steps):
     Xs,Ys = Xs.reshape(batch_size,-1),Ys.reshape(batch_size,-1)
     num_batches = Xs.shape[1] // num_steps
     for i in range(0,num_steps * num_batches,num_steps):
-        X = Xs[i : i + num_steps]
-        Y = Ys[i : i + num_steps]
+        X = Xs[: , i : i + num_steps]
+        Y = Ys[: , i : i + num_steps]
         yield X,Y
 # for X, Y in seq_data_iter_sequential(my_seq, batch_size=2, num_steps=5):
 #     print('X: ', X, '\nY:', Y)
