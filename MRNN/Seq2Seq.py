@@ -29,4 +29,11 @@ class Seq2SeqEncoder(nn.Module):
         # state的形状:(num_layers,batch_size,num_hiddens)
         return output, state
 
+encoder = Seq2SeqEncoder(vocab_size=10,embed_size=8,num_hiddens=16,
+                         num_layers=2)
+encoder.eval()
+X = torch.zeros((4,7),dtype=torch.long)
+output, state = encoder(X)
+print(X.shape)
+print(state.shape)
 
