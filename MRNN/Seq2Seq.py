@@ -17,6 +17,7 @@ class Seq2SeqEncoder(nn.Module):
         self.rnn = nn.GRU(embed_size, num_hiddens, num_layers,
                           dropout = dropout)
 
+    # 前向传播
     def forward(self, X, *args):
         # 输出'X'的形状：(batch_size,num_steps,embed_size)
         X = self.embedding(X)
