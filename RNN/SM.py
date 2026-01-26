@@ -79,4 +79,3 @@ d2l.plot([time[tau+ + i - 1:T - max_steps + i] for i in steps],
          [features[:,(tau + i - 1)].detach().numpy() for i in steps],'time','x',
          legend=[f'{i}-step preds' for i in steps],xlim=[5,1000],figsize=(6,3))
 plt.show()
-
