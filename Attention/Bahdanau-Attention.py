@@ -1,6 +1,6 @@
 # Bahdanau注意力 加入注意力机制的seq2seq
 import torch
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from torch import nn
 from d2l import torch as d2l
 
@@ -19,7 +19,7 @@ class Seq2SeqAttentionDecoder(AttentionDecoder):
     def __init__(self, vocab_size, embed_size, num_hiddens, num_layers,
                  dropout=0, **kwargs):
         super(Seq2SeqAttentionDecoder, self).__init__(**kwargs)
-        self.attention = d2l.AdditiveAttention(num_hiddens, num_hiddens, num_hiddens, dropout)
+        self.attention = d2l.AdditiveAttention(num_hiddens, dropout)
         self.embedding = nn.Embedding(vocab_size, embed_size)
         self.rnn = nn.GRU(embed_size + num_hiddens, num_hiddens, num_layers,
                           dropout=dropout)
@@ -40,7 +40,7 @@ class Seq2SeqAttentionDecoder(AttentionDecoder):
         outputs, self._attention_weights = [], []
         for x in X:
             # query的形状为(batch_size,1,num_hiddens)
-            query = torch.unsqueeze(hidden_state[-1], dim=-1)
+            query = torch.unsqueeze(hidden_state[-1], dim=1)
             # context的形状为(batch_size,1,num_hiddens)
             context = self.attention(query, enc_outputs, enc_outputs, enc_valid_lens)
             x = torch.cat((context, torch.unsqueeze(x, dim=1)), dim=-1)
@@ -77,3 +77,4 @@ decoder = Seq2SeqAttentionDecoder(
 net = d2l.EncoderDecoder(encoder, decoder)
 d2l.train_seq2seq(net, train_iter, lr, num_epochs, tgt_vocab, device)
 plt.show()
+
