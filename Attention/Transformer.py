@@ -1,4 +1,4 @@
-# Transformer 架构
+# Transformer Architecture
 import math
 import torch
 import pandas as pd
