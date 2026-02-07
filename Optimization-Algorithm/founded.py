@@ -4,7 +4,8 @@ from matplotlib import pyplot as plt
 from mpl_toolkits import mplot3d
 from d2l import torch as d2l
 
-
+# For instance, f is the risk whereas g is the empirical risk
+# 1. 判别经验风险和风险的差异
 def f(x):
     return x * torch.cos(np.pi * x)
 
@@ -21,6 +22,8 @@ annotate('min of\nempirical risk', (1.0,-1.2), (0.5, -1.1))
 annotate('min of risk', (1.1, -1.05), (0.95, -0.5))
 # plt.show()
 
+# There are many challenges in deep learning optimization. Local Minima, saddle points, vanishing gradients
+# 1.Local Minima
 x = torch.arange(-1.0, 2.0, 0.01)
 d2l.plot(x, [f(x), ], 'x', 'f(x)')
 annotate('local minimum', (-0.3, -0.25), (-0.77, -1.0))
