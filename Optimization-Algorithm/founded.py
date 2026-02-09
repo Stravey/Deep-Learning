@@ -35,10 +35,10 @@ d2l.plot(x, [x**3], 'x', 'f(x)')
 annotate('saddle point', (0, -0.2), (-0.52, -5.0))
 # plt.show()
 
+# saddle points
 x, y = torch.meshgrid(
     torch.linspace(-1.0, 1.0, 101), torch.linspace(-1.0, 1.0, 101))
 z = x**2 - y**2
-
 ax = d2l.plt.figure().add_subplot(111, projection='3d')
 ax.plot_wireframe(x, y, z, **{'rstride': 10, 'cstride': 10})
 ax.plot([0], [0], [0], 'rx')
