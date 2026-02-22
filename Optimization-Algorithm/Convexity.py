@@ -21,3 +21,4 @@ d2l.set_figsize()
 d2l.plot([x, segment], [f(x), f(segment)], 'x', 'f(x)')
 
 
+
