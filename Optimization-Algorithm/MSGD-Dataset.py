@@ -77,4 +77,3 @@ d2l.plot(*list(map(list, zip(gd_res, sgd_res, mini1_res, mini2_res))),
          legend=['gd', 'sgd', 'batch size = 100', 'batch size = 10'])
 d2l.plt.gca().set_xscale('log')
 plt.show()
-
